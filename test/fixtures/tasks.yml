@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  description: MyText
+  project_id: 1
+  due_date: 1
+  status: MyString
+  priority: MyString
+
+two:
+  title: MyString
+  description: MyText
+  project_id: 1
+  due_date: 1
+  status: MyString
+  priority: MyString

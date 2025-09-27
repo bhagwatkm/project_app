@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Project App" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <!-- Add this inside the <head> tag -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-gray-50 min-h-screen">
+    <nav class="bg-white shadow mb-8">
+      <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div class="text-2xl font-bold text-blue-700">
+          <%= link_to "Project App", root_path, class: "hover:text-blue-900" %>
+        </div>
+        <div>
+          <% if user_signed_in? %>
+<!-- User Profile Card -->
+<div class="max-w-md mx-auto bg-white rounded-lg shadow p-6 mb-6">
+  <div class="flex items-center space-x-4">
+    <!-- Avatar -->
+    <div class="h-16 w-16 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-bold">
+      <%= current_user.name.present? ? current_user.name[0].upcase : "U" %>
+    </div>
+
+    <!-- User Info -->
+    <div>
+      <h2 class="text-lg font-semibold text-gray-800">
+        <%= current_user.name || "User" %>
+      </h2>
+      <p class="text-sm text-gray-500"><%= current_user.email %></p>
+    </div>
+  </div>
+</div>
+
+<!-- Welcome Note -->
+<p class="text-gray-700 mb-4">
+  <% if current_user.avatar.attached? %>
+    <%= image_tag current_user.avatar, class: "h-16 w-16 rounded-full object-cover mb-2" %>
+  <% end %>
+  Welcome <strong><%= current_user.name %></strong>
+</p>
+<!-- Action Buttons -->
+<div class="flex space-x-4">
+  <!-- Edit Profile -->
+  <%= link_to edit_user_registration_path,
+      class: "flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400" do %>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 11l6-6 3 3-6 6H9v-3z" />
+    </svg>
+    Edit Profile
+  <% end %>
+
+<%= link_to destroy_user_session_path,
+            data: { turbo_method: :delete },
+            class: "flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded shadow hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400" do %>
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10V5m0 0a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2h4a2 2 0 002-2v-1" />
+  </svg>
+  Sign Out
+<% end %>
+</div>
+
+          <% else %>
+            <%= button_to "Sign in", new_user_session_path, class: "inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition" %>
+          <% end %>
+            
+        </div>
+      </div>
+    </nav>
+
+    <main class="container mx-auto px-4">
+      <%= yield %>
+    </main>
+  </body>
+
+</html>

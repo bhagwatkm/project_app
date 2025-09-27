@@ -1,0 +1,15 @@
+<% if notice %>
+  <div class="mb-4 p-3 rounded bg-green-100 text-green-800 border border-green-200">
+    <%= notice %>
+  </div>
+<% end %>
+
+<div class="bg-white shadow rounded-lg p-6 mb-6">
+  <%= render @task %>
+</div>
+
+<div class="flex gap-4">
+  <%= link_to "Edit this task", edit_organization_project_task_path(@organization, @project, @task), class: "inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition" %>
+  <%= link_to "Back to tasks", organization_project_tasks_path(@organization, @project), class: "inline-block px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition" %>
+  <%= button_to "Destroy this task", organization_project_task_path(@organization, @project, @task), method: :delete, data: { confirm: "Are you sure?" }, class: "inline-block px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition" %>
+</div>

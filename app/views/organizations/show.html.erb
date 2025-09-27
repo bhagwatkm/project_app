@@ -1,0 +1,43 @@
+<% if notice %>
+  <div class="mb-4 p-3 rounded bg-green-100 text-green-800 border border-green-200">
+    <%= notice %>
+  </div>
+<% end %>
+
+<!-- Organization Card -->
+<div class="bg-gradient-to-r from-blue-50 to-blue-100 shadow-lg rounded-xl p-8 mb-10 flex flex-col md:flex-row items-center justify-between">
+  <div>
+    <h1 class="text-3xl font-extrabold text-blue-900 mb-2 flex items-center gap-2">
+      <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+      <%= @organization.name %>
+    </h1>
+    <p class="text-blue-700 text-lg mb-1"><span class="font-semibold">Slug:</span> <%= @organization.slug %></p>
+  </div>
+  <div class="flex flex-wrap gap-3 mt-6 md:mt-0">
+    <%= link_to edit_organization_path(@organization), class: "px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium shadow flex items-center gap-2", title: "Edit Organization" do %>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536M9 13l6-6 3 3-6 6z"></path><path d="M16 7l-1.5-1.5a2.121 2.121 0 00-3 0l-7.5 7.5V17h3.5l7.5-7.5z"></path></svg>
+      Edit
+    <% end %>
+    <%= link_to organizations_path, class: "px-5 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition font-medium shadow flex items-center gap-2", title: "Back to Organizations" do %>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"></path></svg>
+      Back
+    <% end %>
+    <%= button_to @organization, method: :delete, data: { confirm: "Are you sure?" }, class: "px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium shadow flex items-center gap-2", title: "Delete Organization" do %>
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+      Delete
+    <% end %>
+  </div>
+</div>
+
+<!-- Projects Section -->
+<div class="flex items-center justify-between mb-6">
+  <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+    <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h18"></path></svg>
+    Projects
+  </h2>
+  <%= link_to new_organization_project_path(@organization), class: "px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition font-semibold shadow flex items-center gap-2", title: "Create New Project" do %>
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+    New Project
+  <% end %>
+</div>
+<%= render 'projects/projects', projects: @projects, organization: @organization %>

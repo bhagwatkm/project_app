@@ -1,0 +1,31 @@
+<div id="<%= dom_id task %>" class="space-y-4">
+  <div>
+    <span class="font-semibold text-gray-700">Title:</span>
+    <span class="text-gray-900"><%= task.title %></span>
+  </div>
+
+  <div>
+    <span class="font-semibold text-gray-700">Description:</span>
+    <span class="text-gray-900"><%= task.description %></span>
+  </div>
+
+  <div>
+    <span class="font-semibold text-gray-700">Project:</span>
+    <span class="text-gray-900"><%= task.project.name %></span>
+  </div>
+
+  <div>
+    <span class="font-semibold text-gray-700">Due date:</span>
+    <span class="text-gray-900"><%= task.due_date %></span>
+  </div>
+
+  <div>
+    <span class="font-semibold text-gray-700">Status:</span>
+    <span class="text-gray-900"><%= task.status.titleize %></span>
+  </div>
+
+  <div>
+    <span class="font-semibold text-gray-700">Priority:</span>
+    <span class="text-gray-900"><%= task.priority.capitalize %></span>
+  </div>
+</div>
