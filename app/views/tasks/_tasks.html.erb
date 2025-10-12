@@ -1,0 +1,18 @@
+<% if tasks.any? %>
+  <ul class="divide-y divide-gray-200">
+    <% tasks.each do |task| %>
+      <li class="py-3 flex justify-between items-center">
+        <div>
+          <span class="font-medium text-gray-800"><%= task.title %></span>
+          <span class="text-gray-500 text-sm ml-2"><%= task.status %></span>
+        </div>
+        <div class="flex gap-2">
+          <%= link_to "Edit", edit_organization_project_task_path(project.organization, project, task), class: "text-blue-600 hover:underline" %>
+          <%= button_to "Delete", organization_project_task_path(project.organization, project, task), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:underline" %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <div class="text-gray-500">No tasks found for this project.</div>
+<% end %>

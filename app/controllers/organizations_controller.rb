@@ -7,10 +7,8 @@ class OrganizationsController < ApplicationController
     # @organizations = Organization.all
     # @projects = @organization.projects.paginate(page:params[:page], per_page:2).order(name: :desc)
     # @organizations= @organizations.paginate(page: params[:page], per_page: 2)
+    # binding.pry
       @organizations = Organization.paginate(page: params[:page], per_page: 2)
-
-
-
   end
 
   # GET /organizations/1 or /organizations/1.json

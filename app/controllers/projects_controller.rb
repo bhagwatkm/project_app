@@ -42,6 +42,11 @@ class ProjectsController < ApplicationController
     end
   end
 
+
+  def show
+    @tasks = @project.tasks.order(updated_at: :desc).limit(5)
+  end
+
   # PATCH/PUT /organizations/:organization_id/projects/:id
   def update
     respond_to do |format|

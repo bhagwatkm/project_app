@@ -7,8 +7,14 @@ Rails.application.routes.draw do
       member do
         get 'clone' 
       end
-      resources :tasks
+      resources :tasks do
+       
+        collection do 
+         post 'search'
+        end
+      end
     end
+  
   end         
   
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
