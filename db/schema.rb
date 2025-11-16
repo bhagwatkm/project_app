@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_31_063606) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_09_055131) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -81,6 +81,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_31_063606) do
     t.date "due_date"
     t.string "status"
     t.string "priority"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "user_organizations", charset: "utf8mb3", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "organization_id"
+    t.string "role"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

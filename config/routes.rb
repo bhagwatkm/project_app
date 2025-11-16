@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :user_organizations
   devise_for :users
   resources :lists
   resources :boards
@@ -10,7 +11,7 @@ Rails.application.routes.draw do
       resources :tasks do
        
         collection do 
-         post 'search'
+         get 'search'
         end
       end
     end
