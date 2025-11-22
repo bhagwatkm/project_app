@@ -1,17 +1,16 @@
-<div id="<%= dom_id user_organization %>">
-  <p>
-    <strong>User:</strong>
-    <%= user_organization.user_id %>
+<div id="<%= dom_id user_organization %>" class="bg-white shadow rounded-lg p-4 mb-4">
+  <p class="mb-2">
+    <span class="font-semibold text-gray-700">User:</span>
+    <span class="text-gray-900"><%= user_organization.user.name %></span>
+  </p>
+
+  <p class="mb-2">
+    <span class="font-semibold text-gray-700">Organization:</span>
+    <span class="text-gray-900"><%= user_organization.organization.name %></span>
   </p>
 
   <p>
-    <strong>Organization:</strong>
-    <%= user_organization.organization_id %>
+    <span class="font-semibold text-gray-700">Role:</span>
+    <span class="text-gray-900"><%= user_organization.role.titleize %></span>
   </p>
-
-  <p>
-    <strong>Role:</strong>
-    <%= user_organization.role %>
-  </p>
-
 </div>

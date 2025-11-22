@@ -1,11 +1,9 @@
-<% content_for :title, "New user organization" %>
+<% content_for :title, "New Member" %>
 
-<h1>New user organization</h1>
+<h1 class="text-3xl font-bold mb-6 text-gray-800">New Member</h1>
 
 <%= render "form", user_organization: @user_organization %>
 
-<br>
-
-<div>
-  <%= link_to "Back to user organizations", user_organizations_path %>
+<div class="mt-8">
+  <%= link_to "Back to Member", organization_user_organizations_path, class: "px-6 py-3 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition font-semibold" %>
 </div>

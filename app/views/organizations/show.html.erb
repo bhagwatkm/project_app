@@ -26,6 +26,7 @@
       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
       Delete
     <% end %>
+        <%= link_to "Manage Member",  organization_user_organizations_path(organization_id: @organization.id), class: "px-5 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition font-medium shadow flex items-center gap-2", title: "Manage Member" %>
   </div>
 </div>
 

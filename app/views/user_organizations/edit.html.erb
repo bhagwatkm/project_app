@@ -1,12 +1,55 @@
-<% content_for :title, "Editing user organization" %>
+<% content_for :title, "Edit Member Role" %>
 
-<h1>Editing user organization</h1>
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-md mx-auto">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Edit Role for <%= @user_organization.user.email %></h1>
+<%= form_with(model: [@organization, @user_organization], local: true, class: "space-y-6") do |form| %>
+      <% if @user_organization.errors.any? %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <h4 class="font-bold">Please fix the following errors:</h4>
+          <ul class="list-disc list-inside">
+            <% @user_organization.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
 
-<%= render "form", user_organization: @user_organization %>
+      <div class="bg-gray-50 p-4 rounded">
+        <h3 class="font-medium text-gray-900">User Information</h3>
+        <p class="text-sm text-gray-600 mt-1">
+          <strong>Name:</strong> <%= @user_organization.user.name || 'No name set' %><br>
+          <strong>Email:</strong> <%= @user_organization.user.email %>
+        </p>
+      </div>
 
-<br>
+      <div>
+<%= form.label :role, "Role 1", class: "block text-sm font-medium text-gray-700 mb-2" %>
 
-<div>
-  <%= link_to "Show this user organization", @user_organization %> |
-  <%= link_to "Back to user organizations", user_organizations_path %>
+ <%= form.select :role,
+    options_for_select(
+      [
+        ['Admin', 'admin'],
+        ['Member', 'member'],
+        ['Viewer', 'viewer']
+      ],
+      form.object.role || 'member'
+    ),
+    { prompt: "Choose a role..." },
+    { class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" }
+  %>
+        <p class="mt-1 text-sm text-gray-500">
+          <strong>Admin:</strong> Full access to manage organization and all projects<br>
+          <strong>Member:</strong> Can create and manage projects<br>
+          <strong>Viewer:</strong> Read-only access to projects
+        </p>
+      </div>
+
+      <div class="flex space-x-4">
+        <%= form.submit "Update Role", class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition" %>
+        <%= link_to "Back", organization_user_organization_path, 
+            class: "px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition" %>
+      </div>
+    <% end %>
+  </div>
 </div>

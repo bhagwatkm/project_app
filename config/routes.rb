@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
-  resources :user_organizations
   devise_for :users
   resources :lists
   resources :boards
   resources :organizations do
+    resources :user_organizations
+
     resources :projects do 
       member do
         get 'clone' 

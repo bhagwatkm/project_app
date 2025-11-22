@@ -1,4 +1,5 @@
 class UserOrganizationsController < ApplicationController
+  before_action :set_organization
   before_action :set_user_organization, only: %i[ show edit update destroy ]
 
   # GET /user_organizations or /user_organizations.json
@@ -13,6 +14,8 @@ class UserOrganizationsController < ApplicationController
   # GET /user_organizations/new
   def new
     @user_organization = UserOrganization.new
+    @available_users = User.where.not(id: @organization.user_ids)
+    @available_organizations = Organization.all
   end
 
   # GET /user_organizations/1/edit
@@ -25,7 +28,7 @@ class UserOrganizationsController < ApplicationController
 
     respond_to do |format|
       if @user_organization.save
-        format.html { redirect_to @user_organization, notice: "User organization was successfully created." }
+        format.html { redirect_to organization_user_organizations_path, notice: "User organization was successfully created." }
         format.json { render :show, status: :created, location: @user_organization }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +41,7 @@ class UserOrganizationsController < ApplicationController
   def update
     respond_to do |format|
       if @user_organization.update(user_organization_params)
-        format.html { redirect_to @user_organization, notice: "User organization was successfully updated." }
+        format.html { redirect_to organization_user_organizations_path, notice: "User organization was successfully updated." }
         format.json { render :show, status: :ok, location: @user_organization }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,7 +55,7 @@ class UserOrganizationsController < ApplicationController
     @user_organization.destroy!
 
     respond_to do |format|
-      format.html { redirect_to user_organizations_path, status: :see_other, notice: "User organization was successfully destroyed." }
+      format.html { redirect_to organization_user_organizations_path, status: :see_other, notice: "User organization was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -66,5 +69,9 @@ class UserOrganizationsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def user_organization_params
       params.expect(user_organization: [ :user_id, :organization_id, :role ])
+    end
+
+    def set_organization
+      @organization = Organization.find(params[:organization_id])
     end
 end

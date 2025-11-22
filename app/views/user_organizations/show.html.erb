@@ -1,10 +1,13 @@
-<p style="color: green"><%= notice %></p>
+<% if notice %>
+  <div class="mb-4 p-3 rounded bg-green-100 text-green-800 border border-green-200">
+    <%= notice %>
+  </div>
+<% end %>
 
 <%= render @user_organization %>
 
-<div>
-  <%= link_to "Edit this user organization", edit_user_organization_path(@user_organization) %> |
-  <%= link_to "Back to user organizations", user_organizations_path %>
-
-  <%= button_to "Destroy this user organization", @user_organization, method: :delete %>
+<div class="flex gap-4 mt-6">
+  <%= link_to "Edit Member", edit_organization_user_organization_path(@organization, @user_organization), class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition" %>
+  <%= link_to "Back to Member", organization_user_organizations_path(@organization), class: "px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition" %>
+  <%= button_to "Destroy Member", organization_user_organization_path(@organization, @user_organization), method: :delete, data: { confirm: "Are you sure?" }, class: "px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition" %>
 </div>
