@@ -4,7 +4,7 @@ class UserOrganizationsController < ApplicationController
 
   # GET /user_organizations or /user_organizations.json
   def index
-    @user_organizations = UserOrganization.all
+    @user_organizations = @organization.user_organizations
   end
 
   # GET /user_organizations/1 or /user_organizations/1.json
@@ -13,9 +13,8 @@ class UserOrganizationsController < ApplicationController
 
   # GET /user_organizations/new
   def new
-    @user_organization = UserOrganization.new
+    @user_organization = @organization.user_organizations.new
     @available_users = User.where.not(id: @organization.user_ids)
-    @available_organizations = Organization.all
   end
 
   # GET /user_organizations/1/edit
@@ -24,13 +23,15 @@ class UserOrganizationsController < ApplicationController
 
   # POST /user_organizations or /user_organizations.json
   def create
-    @user_organization = UserOrganization.new(user_organization_params)
+    @user_organization = @organization.user_organizations.new(user_organization_params)
 
     respond_to do |format|
       if @user_organization.save
         format.html { redirect_to organization_user_organizations_path, notice: "User organization was successfully created." }
         format.json { render :show, status: :created, location: @user_organization }
       else
+        @available_users = User.where.not(id: @organization.user_ids)
+
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @user_organization.errors, status: :unprocessable_entity }
       end
@@ -52,8 +53,10 @@ class UserOrganizationsController < ApplicationController
 
   # DELETE /user_organizations/1 or /user_organizations/1.json
   def destroy
-    @user_organization.destroy!
-
+    @user_organization.destroy
+      if @user_organization.errors.any?
+    redirect_to organization_user_organizations_path, alert: @user_organization.errors.full_messages.to_sentence and return
+   end
     respond_to do |format|
       format.html { redirect_to organization_user_organizations_path, status: :see_other, notice: "User organization was successfully destroyed." }
       format.json { head :no_content }
@@ -63,7 +66,7 @@ class UserOrganizationsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user_organization
-      @user_organization = UserOrganization.find(params.expect(:id))
+      @user_organization = @organization.user_organizations.find(params.expect(:id))
     end
 
     # Only allow a list of trusted parameters through.
