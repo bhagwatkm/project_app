@@ -41,3 +41,20 @@ unless User.exists?(email: 'viewer@example.com')
   )
   puts "Created viewer user: #{viewer_user.email}"
 end
+
+# ...existing code...
+
+users_data = [
+  { email: 'alice@example.com', password: 'password123', name: 'Alice Doe' },
+  { email: 'bob@example.com', password: 'password123', name: 'Bob Smith' },
+  { email: 'carol@example.com', password: 'password123', name: 'Carol Johnson' },
+  { email: 'dave@example.com', password: 'password123', name: 'Dave Lee' },
+  { email: 'eve@example.com', password: 'password123', name: 'Eve Kim' }
+]
+
+users_data.each do |user_attrs|
+  unless User.exists?(email: user_attrs[:email])
+    user = User.create!(user_attrs)
+    puts "Created user: #{user.email}"
+  end
+end

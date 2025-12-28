@@ -1,0 +1,10 @@
+class Tag < ApplicationRecord
+    has_many :taggings, dependent: :destroy
+    
+    has_many :tasks, through: :taggings, source: :taggable, source_type: 'Task'
+    has_many :projects, through: :taggings, source: :taggable, source_type: 'Project'
+    validates :name, presence: true, uniqueness: true
+
+    scope :by_name, ->(name) { where(name: name) }
+    scope :search_by_name, ->(query) { where("name LIKE ?", "%#{query}%") }
+end

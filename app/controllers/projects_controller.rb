@@ -1,7 +1,7 @@
 class ProjectsController < ApplicationController
   before_action :set_organization
   before_action :set_project, only: %i[ show edit update destroy ]
-
+  before_action :set_available_tags, only: %i[new edit create update clone]
   # GET /organizations/:organization_id/projects
   def index
     @projects = @organization.projects.paginate(page:params[:page], per_page:2).order(name: :desc)
@@ -81,5 +81,9 @@ class ProjectsController < ApplicationController
 
     def project_params
       params.require(:project).permit(:name, :description, :status)
+    end
+
+    def set_available_tags
+      @available_tags = Tag.all
     end
 end

@@ -28,5 +28,20 @@
     <span class="font-semibold text-gray-700">Priority:</span>
     <span class="text-gray-900"><%= task.priority.capitalize %></span>
   </div>
+
+
+  <div>
+    <span class="font-semibold text-gray-700">Assignee:</span>
+    <span class="text-gray-900"><%= task.assignee ? task.assignee.email : "Unassigned" %></span>
+    </div>
+
+    <% if task.tags.any? %>
+      <div>
+        <span class="font-semibold text-gray-700">Tags:</span>
+        <span class="text-gray-900">
+          <%= task.tags.map(&:name).join(", ") %>
+        </span>
+      </div>
+    <% end %>
 </div>
 

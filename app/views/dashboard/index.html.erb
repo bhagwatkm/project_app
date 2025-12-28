@@ -1,0 +1,387 @@
+<% content_for :title, "Dashboard" %>
+
+<% content_for :head do %>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<% end %>
+
+<div class="space-y-6">
+  <!-- Page Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+    <p class="mt-2 text-gray-600">Welcome back, <%= current_user.email.split('@').first.humanize %>! Here's an overview of your projects and tasks.</p>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Organizations Card -->
+    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Organizations</p>
+          <p class="text-3xl font-bold text-gray-900 mt-2"><%= @total_organizations %></p>
+        </div>
+        <div class="bg-blue-100 rounded-full p-3">
+          <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Projects Card -->
+    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Projects</p>
+          <p class="text-3xl font-bold text-gray-900 mt-2"><%= @total_projects %></p>
+          <p class="text-xs text-gray-500 mt-1"><%= @active_projects %> active, <%= @completed_projects %> completed</p>
+        </div>
+        <div class="bg-green-100 rounded-full p-3">
+          <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Tasks Card -->
+    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Total Tasks</p>
+          <p class="text-3xl font-bold text-gray-900 mt-2"><%= @total_tasks %></p>
+          <p class="text-xs text-gray-500 mt-1"><%= @tasks_completed %> completed</p>
+        </div>
+        <div class="bg-purple-100 rounded-full p-3">
+          <svg class="h-8 w-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- My Tasks Card -->
+    <div class="bg-white rounded-lg shadow p-6 border-l-4 border-orange-500">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">My Tasks</p>
+          <p class="text-3xl font-bold text-gray-900 mt-2"><%= @my_tasks_count %></p>
+          <p class="text-xs text-gray-500 mt-1"><%= @my_tasks_in_progress %> in progress</p>
+        </div>
+        <div class="bg-orange-100 rounded-full p-3">
+          <svg class="h-8 w-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Status Breakdown -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Task Status Chart -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Task Status Breakdown</h2>
+      <div class="flex items-center justify-center">
+        <div class="relative" style="width: 300px; height: 300px;">
+          <canvas id="taskStatusChart"></canvas>
+        </div>
+      </div>
+      <div class="mt-4 flex justify-center space-x-6 text-sm">
+        <div class="flex items-center">
+          <div class="w-3 h-3 bg-gray-400 rounded-full mr-2"></div>
+          <span class="text-gray-700">Not Started: <strong><%= @tasks_not_started %></strong></span>
+        </div>
+        <div class="flex items-center">
+          <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+          <span class="text-gray-700">In Progress: <strong><%= @tasks_in_progress %></strong></span>
+        </div>
+        <div class="flex items-center">
+          <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+          <span class="text-gray-700">Completed: <strong><%= @tasks_completed %></strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Priority Breakdown -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Priority Breakdown</h2>
+      <div class="flex items-center justify-center">
+        <div class="relative" style="width: 300px; height: 300px;">
+          <canvas id="priorityChart"></canvas>
+        </div>
+      </div>
+      <div class="mt-4 flex justify-center space-x-6 text-sm">
+        <div class="flex items-center">
+          <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+          <span class="text-gray-700">High: <strong><%= @high_priority_tasks %></strong></span>
+        </div>
+        <div class="flex items-center">
+          <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+          <span class="text-gray-700">Medium: <strong><%= @medium_priority_tasks %></strong></span>
+        </div>
+        <div class="flex items-center">
+          <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+          <span class="text-gray-700">Low: <strong><%= @low_priority_tasks %></strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Urgent Tasks Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Overdue Tasks -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold text-gray-900">Overdue Tasks</h2>
+        <span class="bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-0.5 rounded"><%= @overdue_tasks.count %></span>
+      </div>
+      <% if @overdue_tasks.any? %>
+        <div class="space-y-3">
+          <% @overdue_tasks.limit(5).each do |task| %>
+            <div class="border-l-4 border-red-500 pl-3 py-2">
+              <p class="text-sm font-medium text-gray-900"><%= task.title %></p>
+              <p class="text-xs text-gray-500 mt-1">
+                <%= link_to task.project.name, organization_project_path(task.project.organization, task.project), class: "hover:text-blue-600" %>
+              </p>
+              <p class="text-xs text-red-600 mt-1">Due: <%= task.due_date.strftime("%b %d, %Y") %></p>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-gray-500">No overdue tasks. Great job!</p>
+      <% end %>
+    </div>
+
+    <!-- Due Today -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold text-gray-900">Due Today</h2>
+        <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded"><%= @due_today_tasks.count %></span>
+      </div>
+      <% if @due_today_tasks.any? %>
+        <div class="space-y-3">
+          <% @due_today_tasks.limit(5).each do |task| %>
+            <div class="border-l-4 border-yellow-500 pl-3 py-2">
+              <p class="text-sm font-medium text-gray-900"><%= task.title %></p>
+              <p class="text-xs text-gray-500 mt-1">
+                <%= link_to task.project.name, organization_project_path(task.project.organization, task.project), class: "hover:text-blue-600" %>
+              </p>
+              <p class="text-xs text-yellow-600 mt-1">Due: Today</p>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-gray-500">No tasks due today.</p>
+      <% end %>
+    </div>
+
+    <!-- Due This Week -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-semibold text-gray-900">Due This Week</h2>
+        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded"><%= @due_this_week_tasks.count %></span>
+      </div>
+      <% if @due_this_week_tasks.any? %>
+        <div class="space-y-3">
+          <% @due_this_week_tasks.limit(5).each do |task| %>
+            <div class="border-l-4 border-blue-500 pl-3 py-2">
+              <p class="text-sm font-medium text-gray-900"><%= task.title %></p>
+              <p class="text-xs text-gray-500 mt-1">
+                <%= link_to task.project.name, organization_project_path(task.project.organization, task.project), class: "hover:text-blue-600" %>
+              </p>
+              <p class="text-xs text-blue-600 mt-1">Due: <%= task.due_date.strftime("%b %d") %></p>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-gray-500">No tasks due this week.</p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Recent Tasks -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Tasks</h2>
+      <% if @recent_tasks.any? %>
+        <div class="space-y-3">
+          <% @recent_tasks.each do |task| %>
+            <div class="flex items-start justify-between p-3 border rounded-lg hover:bg-gray-50 transition">
+              <div class="flex-1">
+                <p class="text-sm font-medium text-gray-900">
+                  <%= link_to task.title, organization_project_task_path(task.project.organization, task.project, task), class: "hover:text-blue-600" %>
+                </p>
+                <p class="text-xs text-gray-500 mt-1">
+                  <%= link_to task.project.name, organization_project_path(task.project.organization, task.project), class: "hover:text-blue-600" %>
+                </p>
+                <div class="flex items-center space-x-2 mt-2">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
+                    <%= task.status == 'completed' ? 'bg-green-100 text-green-800' : 
+                        task.status == 'in_progress' ? 'bg-yellow-100 text-yellow-800' : 
+                        'bg-gray-100 text-gray-800' %>">
+                    <%= task.status.humanize %>
+                  </span>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
+                    <%= task.priority == 'high' ? 'bg-red-100 text-red-800' : 
+                        task.priority == 'medium' ? 'bg-yellow-100 text-yellow-800' : 
+                        'bg-green-100 text-green-800' %>">
+                    <%= task.priority.humanize %>
+                  </span>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-gray-500">No recent tasks.</p>
+      <% end %>
+    </div>
+
+    <!-- Recent Projects -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Recent Projects</h2>
+      <% if @recent_projects.any? %>
+        <div class="space-y-3">
+          <% @recent_projects.each do |project| %>
+            <div class="flex items-start justify-between p-3 border rounded-lg hover:bg-gray-50 transition">
+              <div class="flex-1">
+                <p class="text-sm font-medium text-gray-900">
+                  <%= link_to project.name, organization_project_path(project.organization, project), class: "hover:text-blue-600" %>
+                </p>
+                <p class="text-xs text-gray-500 mt-1 line-clamp-2"><%= project.description %></p>
+                <div class="flex items-center space-x-2 mt-2">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
+                    <%= project.status == 'active' ? 'bg-green-100 text-green-800' : 
+                        project.status == 'completed' ? 'bg-blue-100 text-blue-800' : 
+                        'bg-gray-100 text-gray-800' %>">
+                    <%= project.status.humanize %>
+                  </span>
+                  <span class="text-xs text-gray-500">
+                    <%= pluralize(project.tasks.count, 'task') %>
+                  </span>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-sm text-gray-500">No recent projects.</p>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+  let taskStatusChartInstance = null;
+  let priorityChartInstance = null;
+
+  function initializeCharts() {
+    // Task Status Pie Chart
+    const taskStatusCtx = document.getElementById('taskStatusChart');
+    if (taskStatusCtx && typeof Chart !== 'undefined') {
+      // Destroy existing chart if it exists
+      if (taskStatusChartInstance) {
+        taskStatusChartInstance.destroy();
+      }
+      taskStatusChartInstance = new Chart(taskStatusCtx, {
+        type: 'pie',
+        data: {
+          labels: ['Not Started', 'In Progress', 'Completed'],
+          datasets: [{
+            data: [<%= @tasks_not_started %>, <%= @tasks_in_progress %>, <%= @tasks_completed %>],
+            backgroundColor: [
+              '#9CA3AF', // gray-400
+              '#EAB308', // yellow-500
+              '#22C55E'  // green-500
+            ],
+            borderColor: '#ffffff',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  let label = context.label || '';
+                  if (label) {
+                    label += ': ';
+                  }
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
+                  label += context.parsed + ' (' + percentage + '%)';
+                  return label;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Priority Pie Chart
+    const priorityCtx = document.getElementById('priorityChart');
+    if (priorityCtx && typeof Chart !== 'undefined') {
+      // Destroy existing chart if it exists
+      if (priorityChartInstance) {
+        priorityChartInstance.destroy();
+      }
+      priorityChartInstance = new Chart(priorityCtx, {
+        type: 'pie',
+        data: {
+          labels: ['High Priority', 'Medium Priority', 'Low Priority'],
+          datasets: [{
+            data: [<%= @high_priority_tasks %>, <%= @medium_priority_tasks %>, <%= @low_priority_tasks %>],
+            backgroundColor: [
+              '#EF4444', // red-500
+              '#EAB308', // yellow-500
+              '#22C55E'  // green-500
+            ],
+            borderColor: '#ffffff',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  let label = context.label || '';
+                  if (label) {
+                    label += ': ';
+                  }
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
+                  label += context.parsed + ' (' + percentage + '%)';
+                  return label;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
+
+  // Initialize on DOMContentLoaded and Turbo load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeCharts);
+  } else {
+    initializeCharts();
+  }
+  
+  // Also initialize on Turbo navigation
+  document.addEventListener('turbo:load', initializeCharts);
+</script>

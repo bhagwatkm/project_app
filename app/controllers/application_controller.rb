@@ -1,7 +1,9 @@
 class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
+  include Pundit::Authorization
   allow_browser versions: :modern 
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
   skip_before_action :verify_authenticity_token, if: -> { request.format.json? }
   before_action :configure_permitted_parameters, if: :devise_controller?
 
@@ -17,6 +19,13 @@ class ApplicationController < ActionController::Base
       respond_to do |format|
         format.html { redirect_to root_path, notice: "Record not found." }
         format.json { render json: { error: "Record not found" }, status: :not_found }
+      end
+    end 
+
+    def user_not_authorized
+      respond_to do |format|
+        format.html { redirect_to root_path, alert: "You are not authorized to perform this action." }
+        format.json { render json: { error: "You are not authorized to perform this action." }, status: :forbidden }
       end
     end 
 end

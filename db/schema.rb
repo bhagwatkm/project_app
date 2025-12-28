@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_09_055131) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_27_115530) do
   create_table "active_storage_attachments", charset: "utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -74,6 +74,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_09_055131) do
     t.integer "organization_id"
   end
 
+  create_table "taggings", charset: "utf8mb3", force: :cascade do |t|
+    t.integer "tag_id"
+    t.string "taggable_type"
+    t.integer "taggable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "tags", charset: "utf8mb3", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "tasks", charset: "utf8mb3", force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -83,6 +97,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_09_055131) do
     t.string "priority"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "assignee_id"
+    t.index ["assignee_id"], name: "index_tasks_on_assignee_id"
   end
 
   create_table "user_organizations", charset: "utf8mb3", force: :cascade do |t|
@@ -119,4 +135,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_09_055131) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "boards", "projects"
   add_foreign_key "lists", "boards"
+  add_foreign_key "tasks", "users", column: "assignee_id"
 end

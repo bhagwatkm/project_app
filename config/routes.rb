@@ -1,9 +1,11 @@
 Rails.application.routes.draw do
+  resources :taggings
+  resources :tags
   devise_for :users
   resources :lists
   resources :boards
   resources :organizations do
-    resources :user_organizations
+  resources :user_organizations
 
     resources :projects do 
       member do
@@ -17,7 +19,8 @@ Rails.application.routes.draw do
       end
     end
   
-  end         
+  end  
+  get 'dashboard' => 'dashboard#index'       
   
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

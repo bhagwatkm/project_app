@@ -1,34 +1,26 @@
 class TasksController < ApplicationController
-
+  
   before_action :set_organization
   before_action :set_project
   before_action :set_task, only: [:show, :edit, :update, :destroy]
-
+  before_action :set_organization_user, only: [:new, :edit, :create, :update, :index, :search]  
+  before_action :set_available_tags, only: [:new, :edit, :create, :update, :index, :search]
   # GET /organizations/:organization_id/projects/:project_id/tasks
   def index
     @tasks = @project.tasks
 
     # Sorting
-    sort_column = %w[title status].include?(params[:sort]) ? params[:sort] : "created_at"
-    sort_direction = %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
-    @tasks = @tasks.order("#{sort_column} #{sort_direction}")
-
+    @tasks = apply_sorting(@tasks)
     @tasks = @tasks.paginate(page: params[:page])
   end
 
   # POST /organizations/:organization_id/projects/:project_id/tasks/search
   def search
-     @tasks = @project.tasks
+    @tasks = @project.tasks
 
-    # Search by title
-    if params[:search].present?
-      @tasks = @tasks.where("title LIKE ?", "%#{params[:search]}%")
-    end
+    @tasks = apply_search_and_filter(@tasks)
+    @tasks = apply_sorting(@tasks)
 
-    # Filter by status
-    if params[:status].present?
-      @tasks = @tasks.where(status: params[:status])
-    end
     @tasks = @tasks.paginate(page: params[:page])
     render :index
   end
@@ -42,6 +34,7 @@ class TasksController < ApplicationController
   def new
 
     @task = @project.tasks.new
+    # @organization_users = @organization.users
   end
 
   def update
@@ -67,10 +60,11 @@ class TasksController < ApplicationController
   end 
 
 
+
   private
 
   def task_params
-    params.require(:task).permit(:title, :description, :status, :due_date, :priority  )
+    params.require(:task).permit(:title, :description, :status, :due_date, :priority, :assignee_id, tag_ids: []) 
   end
 
   def set_organization
@@ -84,5 +78,53 @@ class TasksController < ApplicationController
     def set_task
     @task = @project.tasks.find(params[:id])
   end
+
+  def set_organization_user
+    @organization_users = @organization.users
+  end
+
+    def apply_sorting(tasks)
+    sort_column = %w[title status priority].include?(params[:sort]) ? params[:sort] : "created_at"
+    sort_direction = %w[asc desc].include?(params[:direction]) ? params[:direction] : "desc"
+    
+    if params[:sort] == "assignee_id"
+      tasks.sorted_by_assignee_email(sort_direction)
+    else
+      tasks.order("#{sort_column} #{sort_direction}")
+    end
+    end
+    def apply_search_and_filter(tasks)
+      if params[:search].present?
+         tasks = tasks.searched_by_title(params[:search])
+      end
+
+      if params[:status].present?
+        tasks = tasks.filter_by_status(params[:status])
+        
+      end
+
+      if params[:priority].present?
+        tasks = tasks.filter_by_priority(params[:priority])
+      end
+
+      if params[:due_date].present?
+        tasks = tasks.filter_by_duedate(params[:due_date])
+      end
+
+      
+        tasks = tasks.filter_by_assignee(params[:assignee_id])
+      
+
+
+      if params[:tag_id].present?
+        tasks = tasks.filter_by_tag(params[:tag_id])
+      end
+
+      tasks
+    end
+
+    def set_available_tags
+      @available_tags = Tag.all
+    end
 
 end

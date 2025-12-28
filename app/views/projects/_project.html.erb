@@ -13,5 +13,12 @@
     <strong>Status:</strong>
     <%= project.status.titleize %>
   </p>
-
+    <% if project.tags.any? %>
+      <div>
+        <span class="font-semibold text-gray-700">Tags:</span>
+        <span class="text-gray-900">
+          <%= task.tags.map(&:name).join(", ") %>
+        </span>
+      </div>
+    <% end %>
 </div>

@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Taggings" %>
+
+<h1>Taggings</h1>
+
+<div id="taggings">
+  <% @taggings.each do |tagging| %>
+    <%= render tagging %>
+    <p>
+      <%= link_to "Show this tagging", tagging %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New tagging", new_tagging_path %>

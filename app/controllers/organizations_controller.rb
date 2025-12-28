@@ -4,31 +4,31 @@ class OrganizationsController < ApplicationController
 
   # GET /organizations or /organizations.json
   def index
-    # @organizations = Organization.all
-    # @projects = @organization.projects.paginate(page:params[:page], per_page:2).order(name: :desc)
-    # @organizations= @organizations.paginate(page: params[:page], per_page: 2)
-    # binding.pry
-      @organizations = Organization.paginate(page: params[:page], per_page: 2)
+  @organizations = policy_scope(Organization).paginate(page: params[:page], per_page: 2)
+    authorize @organizations
   end
 
   # GET /organizations/1 or /organizations/1.json
   def show
+    authorize @organization
     @projects = @organization.projects.order(name: :desc).paginate(page: params[:page], per_page: 4)
   end
 
   # GET /organizations/new
   def new
     @organization = Organization.new
+    authorize @organization
   end
 
   # GET /organizations/1/edit
   def edit
+    authorize @organization
   end
 
   # POST /organizations or /organizations.json
   def create
     @organization = Organization.new(organization_params)
-
+    authorize @organization
     respond_to do |format|
       if @organization.save
         format.html { redirect_to @organization, notice: "Organization was successfully created." }
@@ -42,6 +42,7 @@ class OrganizationsController < ApplicationController
 
   # PATCH/PUT /organizations/1 or /organizations/1.json
   def update
+    authorize @organization
     respond_to do |format|
       if @organization.update(organization_params)
         format.html { redirect_to @organization, notice: "Organization was successfully updated." }
@@ -55,6 +56,7 @@ class OrganizationsController < ApplicationController
 
   # DELETE /organizations/1 or /organizations/1.json
   def destroy
+    authorize @organization
     @organization.destroy!
 
     respond_to do |format|

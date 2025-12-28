@@ -24,6 +24,10 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><rect x="2" y="2" width="13" height="13" rx="2"/></svg>
             Clone
           <% end %>
+          <%= link_to organization_project_tasks_path(@organization, project), class: "px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition font-medium flex items-center gap-1", title: "View All Tasks" do %>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+            View All Tasks
+          <% end %>
         </div>
       </div>
     <% end %>

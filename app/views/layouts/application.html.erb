@@ -30,6 +30,17 @@
         <div class="text-2xl font-bold text-blue-700">
           <%= link_to "Project App", root_path, class: "hover:text-blue-900" %>
         </div>
+        <% if user_signed_in? %>
+            <div class="hidden md:flex space-x-4">
+              <%= link_to "Organizations", organizations_path, class: "px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 rounded-md transition" %>
+              <%= link_to "Dashboard", dashboard_path, class: "px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 rounded-md transition" %>
+
+              </div>
+            <div class="hidden md:flex space-x-4">
+              <%= link_to "Tags", tags_path, class: "px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-100 rounded-md transition" %>
+            </div>
+          <% end %>
+          </div>
         <div>
           <% if user_signed_in? %>
             <!-- User Profile Dropdown -->
@@ -82,7 +93,7 @@
                   </div>
                 <% end %>
                 
-                <%= link_to destroy_user_session_path, method: :delete, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
+                <%= link_to destroy_user_session_path, data:{turbo_method: :delete},class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" do %>
                   <div class="flex items-center">
                     <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10V5m0 0a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2h4a2 2 0 002-2v-1"></path>

@@ -1,0 +1,12 @@
+<% content_for :title, "Editing tagging" %>
+
+<h1>Editing tagging</h1>
+
+<%= render "form", tagging: @tagging %>
+
+<br>
+
+<div>
+  <%= link_to "Show this tagging", @tagging %> |
+  <%= link_to "Back to taggings", taggings_path %>
+</div>

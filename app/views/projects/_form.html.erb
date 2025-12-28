@@ -27,7 +27,21 @@
     
   </div>
 
-  <div>
+  <div class="mb-4">
+    <%= form.label :tag_ids, "Tags", class: "block mb-1 font-medium text-gray-700" %>
+    <%= form.select :tag_ids, 
+        options_from_collection_for_select(@available_tags || [], :id, :name, project.tag_ids),
+        {},
+        { 
+          multiple: true, 
+          class: "w-full",
+
+        } %>
+    <p class="mt-1 text-sm text-gray-500">
+      Select tags for this task. 
+      <%= link_to "Manage tags", tags_path, class: "text-blue-600 hover:underline", target: "_blank" %>
+    </p>
+  </div>
     <%= form.submit "Save", class: "px-6 py-2 bg-green-600 text-white font-semibold rounded shadow hover:bg-green-700 transition" %>
   </div>
 <% end %>
